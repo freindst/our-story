@@ -1,0 +1,457 @@
+:root {
+    --primary-color: #1a0b2e;
+    --accent-color: #f0e6fa;
+    --milky-way-start: #432371;
+    --milky-way-end: #faae7b;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Lato', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+}
+
+#app {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.stage {
+    /* flex: 1; Removed to allow specific height */
+    position: relative;
+    width: 100%;
+    height: 90%;
+    /* 0.9 size as requested */
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.scene.active {
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+/* Split Container */
+.split-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.split-screen {
+    width: 50%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    /* For absolute positioning of phones */
+}
+
+/* Phone Popup Overlay */
+.phone-popup {
+    position: absolute;
+    bottom: 100px;
+    /* Above the milky way bar */
+    width: 220px;
+    height: 400px;
+    background: #111;
+    border-radius: 30px;
+    border: 5px solid #444;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Pop up effect */
+}
+
+/* Position phones "on the side" */
+.split-screen.left .phone-popup {
+    right: 30px;
+    /* Inner edge of left screen */
+    /* Or left: 30px for outer edge? "On the side" usually means outer. 
+       Let's try outer edges to frame the center. */
+    left: 30px;
+}
+
+.split-screen.right .phone-popup {
+    right: 30px;
+    /* Outer edge of right screen */
+}
+
+.scene.active.animate-messages .phone-popup {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.phone-screen-content {
+    flex: 1;
+    background: #e5ddd5;
+    /* Chat bg */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.phone-notch {
+    height: 20px;
+    background: #111;
+    width: 50%;
+    align-self: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+}
+
+/* Message Bubbles */
+.message-bubble {
+    background: #fff;
+    color: #333;
+    padding: 15px;
+    /* Increased padding */
+    border-radius: 20px;
+    /* Rounder corners */
+    margin-bottom: 10px;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+    /* Cartoon style font */
+    font-size: 1.1em;
+    /* Larger font size */
+    font-weight: bold;
+    /* Bolder text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+    /* Added translateY for slide-up effect */
+    filter: blur(5px);
+    /* Start blurred */
+    transition: all 0.8s ease-out;
+    /* Slower transition */
+}
+
+.message-bubble.sent {
+    align-self: flex-end;
+    background: #dcf8c6;
+    border-bottom-right-radius: 2px;
+}
+
+.message-bubble.received {
+    align-self: flex-start;
+    background: #fff;
+    border-bottom-left-radius: 2px;
+}
+
+.scene.active.animate-messages .message-bubble {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+    /* Clear blur */
+}
+
+.delay-1 {
+    transition-delay: 2s;
+    /* Increased delay */
+}
+
+/* Phone pops up at 0.8s, then msg */
+.delay-2 {
+    transition-delay: 5s;
+    /* Significantly increased gap */
+}
+
+.full-screen {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Bottom Milky Way */
+.milky-way-bottom {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: 15%;
+    /* Increased height */
+    background: rgba(15, 5, 24, 0.8);
+    z-index: 20;
+    overflow: hidden;
+    border-top: 10px solid rgba(255, 255, 255, 0.8);
+    /* Thicker, more noticeable white border */
+    box-sizing: border-box;
+    /* Ensure border is included in height */
+}
+
+.milky-way-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--milky-way-start), var(--milky-way-end));
+    box-shadow: 0 0 20px rgba(250, 174, 123, 0.5);
+    transition: width 0.1s linear;
+}
+
+.milky-way-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('assets/images/milky_way_texture.png');
+    background-size: auto 100%;
+    /* Ensure full height of texture is visible */
+    opacity: 0.8;
+    /* Increased opacity for better visibility */
+    animation: flowHorizontal 20s linear infinite;
+}
+
+@keyframes flowHorizontal {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 0;
+    }
+}
+
+/* Light/Dark Transitions */
+.transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+/* End Screen */
+.end-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 1s ease;
+}
+
+.end-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#replay-btn {
+    font-size: 1.5em;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#replay-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.stage {
+    /* flex: 1; Removed to allow specific height */
+    position: relative;
+    width: 100%;
+    height: 85%;
+    /* Reduced slightly to give more room for wider progress bar */
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls {
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+    z-index: 100;
+}
+
+/* Borders */
+button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    backdrop-filter: blur(5px);
+    transition: background 0.3s;
+    margin-left: 10px;
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Borders */
+/* Borders & Spacing */
+.split-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    /* Outer spacing */
+    gap: 20px;
+    /* Space between screens */
+    box-sizing: border-box;
+    background: #000;
+    /* Background for the gaps */
+}
+
+.split-screen {
+    flex: 1;
+    height: 100%;
+    border: 30px solid #fff;
+    /* Increased border width */
+    border-image: url('assets/images/border_texture.png') 60 round;
+    /* Adjusted slice for wider border */
+    box-sizing: border-box;
+    background-clip: padding-box;
+    background-size: contain;
+    /* Ensure whole image is visible */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #1a0b2e;
+    /* Fill gaps with primary color */
+}
+
+.full-screen {
+    width: calc(100% - 40px);
+    /* Account for margins */
+    height: calc(100% - 40px);
+    margin: 20px;
+    border: 30px solid #fff;
+    /* Increased border width */
+    border-image: url('assets/images/border_texture.png') 60 round;
+    box-sizing: border-box;
+    background-size: contain;
+    /* Ensure whole image is visible */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #1a0b2e;
+    position: relative;
+    /* Ensure absolute children are positioned relative to this */
+}
+
+/* Full Screen Phone Positioning */
+.phone-popup.left-pos {
+    left: 50px;
+    right: auto;
+}
+
+.phone-popup.right-pos {
+    right: 50px;
+    left: auto;
+}
+
+.milky-way-bottom {
+    border-top: 4px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .split-container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .split-screen {
+        width: 100%;
+        height: 50%;
+        border: 10px solid #fff;
+        /* Smaller border on mobile */
+        border-image: url('assets/images/border_texture.png') 20 round;
+    }
+
+    .phone-popup {
+        width: 180px;
+        height: 300px;
+        bottom: 80px;
+        /* Adjust for smaller screens */
+    }
+
+    .split-screen.left .phone-popup {
+        right: 10px;
+        left: auto;
+        transform: translateY(20px);
+    }
+
+    .split-screen.right .phone-popup {
+        left: 10px;
+        right: auto;
+        transform: translateY(20px);
+    }
+
+    .controls {
+        bottom: 70px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button {
+        margin-left: 0;
+        font-size: 0.8em;
+        padding: 8px 15px;
+    }
+
+    #replay-btn {
+        font-size: 1.2em;
+        padding: 10px 30px;
+    }
+}

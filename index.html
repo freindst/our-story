@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <div id="stage" class="stage">
+            <!-- Scenes will be injected here -->
+        </div>
+
+        <div id="transition-overlay" class="transition-overlay"></div>
+
+        <div class="milky-way-bottom">
+            <div id="milky-way-progress" class="milky-way-progress"></div>
+        </div>
+
+        <div id="end-screen" class="end-screen hidden">
+            <button id="replay-btn">Replay Story</button>
+        </div>
+
+        <div class="controls">
+            <button id="play-pause-btn">Play</button>
+            <button id="mute-btn">Unmute</button>
+        </div>
+
+        <audio id="bg-music" loop>
+            <source
+                src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-111653.mp3"
+                type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
